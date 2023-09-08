@@ -24,7 +24,7 @@ This repository delves into one of the classic synchronization problems in Compu
 
 The Dining Philosopher Problem serves as a synchronization puzzle that helps us understand challenges related to resource allocation in multi-threaded environments. This problem is usually introduced after discussing the producer-consumer problem.
 
-## 🖼️ Diagram Description
+## 🖼️ Description
 
 - The setup consists of five philosophers seated around a delicious cake.
 - Five spoons are placed between them, serving as the shared resources.
