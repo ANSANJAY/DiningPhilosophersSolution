@@ -1,21 +1,3 @@
-/*
- * =====================================================================================
- *
- *       Filename:  din_ph.h
- *
- *    Description: Files which declares the structures used for Dining Philosopher Problem 
- *
- *        Version:  1.0
- *        Created:  01/30/2021 03:14:44 AM
- *       Revision:  none
- *       Compiler:  gcc
- *
- *         Author:  ABHISHEK SAGAR (), sachinites@gmail.com
- *   Organization:  Juniper Networks
- *
- * =====================================================================================
- */
-
 #ifndef __DIN_PHIL__
 #define __DIN_PHIL__
 
