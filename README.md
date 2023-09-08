@@ -128,7 +128,7 @@ This implementation of the Dining Philosophers problem provides a deadlock-free 
 
 ## Sample Output 
 
-![](./)
+![](./Screenshot%20from%202023-09-08%2000-38-52.png)
 
 
 ## 📚 Resources
