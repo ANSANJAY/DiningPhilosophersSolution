@@ -31,8 +31,6 @@
 
 ---
 
-Now, let's create some potential interview questions based on this topic.
-
 ### 🎤 Interview Questions on Dining Philosopher Problem
 
 ---
