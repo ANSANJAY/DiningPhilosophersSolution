@@ -10,6 +10,8 @@ An implementation of the Dining Philosophers problem, focusing on concurrency co
 
 This repository delves into one of the classic synchronization problems in Computer Science - The Dining Philosopher Problem. 
 
+![](https://github.com/ANSANJAY/DiningPhilosophersSolution/blob/main/An_illustration_of_the_dining_philosophers_problem.png)
+
 ## 📌 Table of Contents
 
 - [Introduction](#introduction)
