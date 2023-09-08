@@ -73,6 +73,29 @@ The Dining Philosophers problem represents `N` philosophers sitting around a rou
 
 **Logic:** The left spoon for a philosopher is the one with the same ID as the philosopher.
 
+```scss
+P0 (Thread)------S0 (Resource)------P1 (Thread)
+   \                                 /
+    \                               /
+     S4 (Resource)           S0 (Resource)
+      \                           /
+       \                         /
+        P4 (Thread)------S4 (Resource)------P2 (Thread)
+       /                         \
+      /                           \
+     S3 (Resource)           S1 (Resource)
+    /                               \
+   /                                 \
+P3 (Thread)------S3 (Resource)------P3 (Thread)
+```
+
+Following the rules:
+- P0's left spoon is S0 and right spoon is S4.
+- P1's left spoon is S1 and right spoon is S0.
+- P2's left spoon is S2 and right spoon is S1.
+- P3's left spoon is S3 and right spoon is S2.
+- P4's left spoon is S4 and right spoon is S3.
+
 ### `phil_eat`
 **Purpose:** Defines the act of a philosopher eating using the spoons.
 
