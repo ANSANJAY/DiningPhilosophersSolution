@@ -1,9 +1,5 @@
 # DiningPhilosophersSolution
 An implementation of the Dining Philosophers problem, focusing on concurrency control via mutexes and semaphores. This repo demonstrates how to manage multiple processes accessing shared resources, aiming to solve issues of deadlock and contention. Includes code examples and a guide.
-
-
-
-
 ---
 
 # 🍽️ Dining Philosopher Problem 
@@ -47,10 +43,92 @@ The core of this project revolves around:
 - Depicting spoons as shared resources.
 - Creating a mechanism wherein all philosopher threads run indefinitely, ensuring concurrent eating by non-neighboring philosophers.
 
+# Dining Philosophers Problem
+
+This repository provides a solution to the classic synchronization problem known as the Dining Philosophers problem. Using the Pthreads library, the program ensures that all philosophers can eat without running into deadlocks or race conditions.
+
+## Table of Contents
+- [Overview](#overview)
+- [Functions Breakdown](#functions-breakdown)
+  - [`phil_get_right_spoon`](#phil_get_right_spoon)
+  - [`phil_get_left_spoon`](#phil_get_left_spoon)
+  - [`phil_eat`](#phil_eat)
+  - [`philosopher_release_both_spoons`](#philosopher_release_both_spoons)
+  - [`philosopher_get_access_both_spoons`](#philosopher_get_access_both_spoons)
+  - [`philosopher_fn`](#philosopher_fn)
+  - [`main`](#main)
+  
+## Overview
+The Dining Philosophers problem represents `N` philosophers sitting around a round table. Each philosopher spends their time thinking and eating. For eating, they need to use two spoons - one on their left and another on their right. The challenge is to ensure all philosophers can eat without any of them getting into a deadlock.
+
+## Functions Breakdown
+
+### `phil_get_right_spoon`
+**Purpose:** Retrieves the right spoon for a given philosopher.
+
+**Logic:** If the philosopher is the first one (with ID `0`), their right spoon is the last spoon in the array (to simulate the circular table). Otherwise, the right spoon for a philosopher is the one with an ID one less than the philosopher's ID.
+
+### `phil_get_left_spoon`
+**Purpose:** Retrieves the left spoon for a given philosopher.
+
+**Logic:** The left spoon for a philosopher is the one with the same ID as the philosopher.
+
+### `phil_eat`
+**Purpose:** Defines the act of a philosopher eating using the spoons.
+
+**Logic:** Before a philosopher eats, the function ensures that:
+1. Both the spoons are associated with the correct philosopher.
+2. Both the spoons are currently in use.
+Once the checks pass, it prints out the details of the philosopher and the spoons they're using, increments their `eat_count`, and simulates eating with a sleep function.
+
+### `philosopher_release_both_spoons`
+**Purpose:** Releases the spoons after the philosopher finishes eating.
+
+**Logic:** After a philosopher has finished eating:
+1. Locks are acquired on both the spoons.
+2. It's verified that the spoons are associated with the current philosopher and are in use.
+3. Both the spoons are released, and any waiting philosopher is signaled.
+4. Locks on the spoons are then released.
+
+### `philosopher_get_access_both_spoons`
+**Purpose:** Helps a philosopher acquire both spoons before eating.
+
+**Logic:** 
+1. The philosopher tries to acquire the left spoon.
+2. If the left spoon is being used by another philosopher, the current philosopher waits.
+3. After acquiring the left spoon, the philosopher tries to acquire the right spoon.
+4. If the right spoon is available, it's acquired. If not, the philosopher releases the left spoon and waits again.
+5. This mechanism prevents deadlocks by ensuring a philosopher does not indefinitely hold onto a single spoon, blocking others.
+
+### `philosopher_fn`
+**Purpose:** The main function for each philosopher thread.
+
+**Logic:** The philosopher, in an infinite loop, tries to:
+1. Acquire both spoons.
+2. If successful, they eat.
+3. After eating, they release both spoons.
+4. They think (simulated with a sleep function) and then repeat the process.
+
+### `main`
+**Purpose:** The main driver function.
+
+**Logic:** 
+1. Initializes all spoons.
+2. Initializes all philosophers and creates threads for each one.
+3. Waits for all philosopher threads to finish (though in this implementation, they loop indefinitely).
+
+## Conclusion
+This implementation of the Dining Philosophers problem provides a deadlock-free and race-condition-free solution using mutex locks and condition variables. Proper synchronization ensures that each philosopher gets a chance to eat while maintaining the integrity of the program.
+
+
 ## 💡 Key Insights
 
 - Mastering thread synchronization is akin to mastering math; practice is crucial.
 - A well-structured plan of data structures and program architecture is fundamental to address this problem.
+
+## Sample Output 
+
+
 
 
 ## 📚 Resources
