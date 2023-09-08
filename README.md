@@ -143,11 +143,7 @@ Once the checks pass, it prints out the details of the philosopher and the spoon
 ## Conclusion
 This implementation of the Dining Philosophers problem provides a deadlock-free and race-condition-free solution using mutex locks and condition variables. Proper synchronization ensures that each philosopher gets a chance to eat while maintaining the integrity of the program.
 
-
-## 💡 Key Insights
-
-- Mastering thread synchronization is akin to mastering math; practice is crucial.
-- A well-structured plan of data structures and program architecture is fundamental to address this problem.
+---
 
 ## Sample Output 
 
