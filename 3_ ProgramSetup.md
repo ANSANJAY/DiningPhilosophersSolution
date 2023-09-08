@@ -27,16 +27,62 @@ The Dining Philosophers Problem is a classic problem from computer science and c
 1. **Philosopher get right spoon**:
    - Returns the right spoon for the given philosopher.
    - For Philosopher `i`, it generally returns `i-1` spoon. But for Philosopher 0, it returns the last spoon.
+  ```C
+ * Retrieve the right spoon for the given philosopher.
+ */
+static spoon_t *phil_get_right_spoon(phil_t *phil) {
+	int phil_id = phil->phil_id;
+
+	if (phil_id == 0) {
+		return &spoon[N_PHILOSOPHER -1];
+	}
+	return &spoon[phil_id - 1];
+}
+```
 
 2. **Philosopher get left spoon**:
    - Returns the left spoon for the given philosopher.
    - For Philosopher `i`, it returns the `i` spoon.
+
+```C
+     
+ * Retrieve the left spoon for the given philosopher.
+ */
+static spoon_t *phil_get_left_spoon(phil_t *phil) {
+	return &spoon[phil->phil_id];
+}
+     
+```
 
 3. **Philosopher eat**:
    - Represents the action of the philosopher eating when he has access to both his spoons.
    - Before eating, it checks whether the philosopher really has access to both his spoons.
    - Once verified, the philosopher's eat count is incremented.
    - The philosopher (thread) sleeps for one second to simulate eating.
+  
+```C
+/* 
+ * The main function where a philosopher eats.
+ * It ensures that the philosopher eats using the correct pair of spoons.
+ */
+void phil_eat(phil_t *phil) {
+	spoon_t *left_spoon = phil_get_left_spoon(phil);
+	spoon_t *right_spoon = phil_get_right_spoon(phil);
+
+	// Validations to ensure philosopher eats with the correct spoons
+	assert(left_spoon->phil == phil);
+	assert(right_spoon->phil == phil);
+	assert(left_spoon->is_used == true);
+	assert(right_spoon->is_used == true);
+
+	phil->eat_count++;
+	printf("Phil %d eats with spoon [%d, %d] for %d times\n",
+		phil->phil_id, left_spoon->spoon_id, right_spoon->spoon_id,
+		phil->eat_count);
+	sleep(1); // Let the philosopher enjoy his meal for a second
+}
+
+```
 
 The core solution revolves around the synchronization problem when philosophers try to access their spoons. Two main functions for this are:
 
