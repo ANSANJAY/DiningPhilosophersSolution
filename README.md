@@ -11,7 +11,7 @@ This repository delves into one of the classic synchronization problems in Compu
 ## 📌 Table of Contents
 
 - [Introduction](#introduction)
-- [Diagram Description](#diagram-description)
+- [Description](#diagram-description)
 - [Problem Constraints](#problem-constraints)
 - [Solution Approach](#solution-approach)
 
