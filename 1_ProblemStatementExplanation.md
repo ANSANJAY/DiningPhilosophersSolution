@@ -1,4 +1,4 @@
-### 📝 Dining Philosopher Problem - Revision Notes
+### 📝 Dining Philosopher Problem
 
 ---
 
@@ -6,7 +6,7 @@
 - A classic synchronization problem often discussed after the producer-consumer problem.
 - A setup where philosophers (representing threads) compete for resources, which are spoons.
 
-#### 🖼️ Diagram Description
+#### 🖼️  Description
 - Five philosophers sit around a cake.
 - There are 5 spoons, one between each pair of philosophers.
 - A philosopher can eat the cake only when he has both the left and right spoons.
@@ -51,7 +51,3 @@ Now, let's create some potential interview questions based on this topic.
 
 #### 5. How is the Dining Philosopher Problem relevant to real-world multi-threading problems?
    - **Answer**: The problem demonstrates the challenges in resource allocation among several competing entities or threads, showing the potential issues of deadlocks and the importance of careful resource scheduling.
-
----
-
-This should help you with revision for interviews regarding the Dining Philosopher Problem. If you have any more questions or need further notes, please let me know!
