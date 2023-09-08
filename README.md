@@ -128,7 +128,7 @@ This implementation of the Dining Philosophers problem provides a deadlock-free 
 
 ## Sample Output 
 
-
+![](./)
 
 
 ## 📚 Resources
