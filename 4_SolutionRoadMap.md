@@ -7,8 +7,108 @@
 ### Functions in Focus 🕵️
 
 1. `philosopher_function`
+   
+```C
+/* 
+ * Main function for each philosopher thread.
+ * Each philosopher tries to get spoons and eat in a loop.
+ */
+void * philosopher_fn(void *arg) {
+	phil_t *phil = (phil_t *)arg;
+
+	while(1) {
+		if (philosopher_get_access_both_spoons(phil)) {
+			phil_eat(phil);
+			philosopher_release_both_spoons(phil);
+			sleep(1);
+		}
+	}
+}
+```
+
 2. `philosopher_get_access_both_spoons`
+
+```C
+/* 
+ * A function to help a philosopher get both spoons before eating.
+ * Ensures safe acquisition of spoons without causing deadlocks.
+ */
+bool philosopher_get_access_both_spoons(phil_t *phil) {
+	spoon_t *left_spoon  = phil_get_left_spoon(phil);
+	spoon_t *right_spoon = phil_get_right_spoon(phil);
+
+	// Try to acquire left spoon
+	pthread_mutex_lock(&left_spoon->mutex);
+	// Wait if left spoon is used by another philosopher
+	while(left_spoon->is_used && left_spoon->phil != phil) {
+		pthread_cond_wait(&left_spoon->cv, &left_spoon->mutex);
+	}
+	left_spoon->is_used = true;
+	left_spoon->phil = phil;
+	pthread_mutex_unlock(&left_spoon->mutex);
+
+	// Try to acquire right spoon
+	pthread_mutex_lock(&right_spoon->mutex);
+	if (right_spoon->is_used == false) {
+		right_spoon->is_used = true;
+		right_spoon->phil = phil;
+		pthread_mutex_unlock(&right_spoon->mutex);
+		return true;
+	}
+	// If failed to get right spoon, release the left spoon
+	else {
+		if (right_spoon->phil != phil) {
+			pthread_mutex_lock(&left_spoon->mutex);
+			left_spoon->is_used = false;
+			left_spoon->phil = NULL;
+			pthread_mutex_unlock(&left_spoon->mutex);
+			pthread_mutex_unlock(&right_spoon->mutex);
+			return false;
+		}
+		else {
+			pthread_mutex_unlock(&right_spoon->mutex);
+			return true;
+		}
+	}
+}
+
+```
 3. `philosopher_release_both_spoons`
+
+```C
+/* 
+ * Release the spoons once a philosopher has finished eating.
+ */
+void philosopher_release_both_spoons(phil_t *phil) {
+	spoon_t *left_spoon  = phil_get_left_spoon(phil);
+	spoon_t *right_spoon = phil_get_right_spoon(phil);
+
+	pthread_mutex_lock(&left_spoon->mutex);
+	pthread_mutex_lock(&right_spoon->mutex);
+
+	// Validation to ensure correctness before releasing the spoons
+	assert(left_spoon->phil == phil);
+	assert(left_spoon->is_used == true);
+	assert(right_spoon->phil == phil);
+	assert(right_spoon->is_used == true);
+
+	// Release left spoon
+	printf("phil %d releasing the left spoon %d\n", phil->phil_id, left_spoon->spoon_id);
+	left_spoon->phil = NULL;
+	left_spoon->is_used = false;
+	pthread_cond_signal(&left_spoon->cv);
+	pthread_mutex_unlock(&left_spoon->mutex);
+
+	// Release right spoon
+	printf("phil %d releasing the right spoon %d\n", phil->phil_id, right_spoon->spoon_id);
+	right_spoon->phil = NULL;
+	right_spoon->is_used = false;
+	pthread_cond_signal(&right_spoon->cv);
+	pthread_mutex_unlock(&right_spoon->mutex);
+}
+
+```
+
 
 ### Key Logics to Implement 🧠
 
