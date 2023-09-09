@@ -14,6 +14,25 @@ An implementation of the Dining Philosophers problem, focusing on concurrency co
 
 ### Arguments and Setup 🔧
 
+```C
+/* 
+ * Main function for each philosopher thread.
+ * Each philosopher tries to get spoons and eat in a loop.
+ */
+void * philosopher_fn(void *arg) {
+	phil_t *phil = (phil_t *)arg;
+
+	while(1) {
+		if (philosopher_get_access_both_spoons(phil)) {
+			phil_eat(phil);
+			philosopher_release_both_spoons(phil);
+			sleep(1);
+		}
+	}
+}
+
+```
+
 - The function takes an **argument**: a pointer to the philosopher.
     ```pseudo
     Argument -> philosopher_pointer
@@ -39,13 +58,6 @@ An implementation of the Dining Philosophers problem, focusing on concurrency co
     - The philosopher releases the spoons using the `philosopher_release_both_spoons` API. This ensures the spoons are available for others.
     - Thereafter, the philosopher goes into a `sleep(1)` state, abiding by the problem's constraints, before trying to acquire the spoons again.
 
-### Abstraction and Implementation 🧠
-
-- Multithreaded programs often benefit from a **layer of abstraction**.
-- The high-level `philosopher_function` relies on supporting APIs (`philosopher_get_access_both_spoons` and `philosopher_release_both_spoons`). Even if their internal workings aren't discussed at this point, we understand their purpose.
-- The actual implementations of these APIs will be delved into later.
-
----
 
 ## Interview Questions & Answers 🤔💬
 
@@ -64,6 +76,4 @@ An implementation of the Dining Philosophers problem, focusing on concurrency co
 5. **Q**: In the `philosopher_function`, what does the API `philosopher_get_access_both_spoons` do?
    - **A**: The `philosopher_get_access_both_spoons` API checks and tries to allow a philosopher to acquire both spoons. If successful, it returns `true`, indicating the philosopher can now eat.
 
----
-
-Good luck with your interview preparations! Remember to understand the underlying concepts and logic behind the problem. 🍀🌟
+- Remember to understand the underlying concepts and logic behind the problem. 🍀🌟
