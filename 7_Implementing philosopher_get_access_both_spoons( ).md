@@ -12,6 +12,47 @@
 
 ### 🛠️ Implementation:
 
+```C
+bool philosopher_get_access_both_spoons(phil_t *phil) {
+	spoon_t *left_spoon  = phil_get_left_spoon(phil);
+	spoon_t *right_spoon = phil_get_right_spoon(phil);
+
+	// Try to acquire left spoon
+	pthread_mutex_lock(&left_spoon->mutex);
+	// Wait if left spoon is used by another philosopher
+	while(left_spoon->is_used && left_spoon->phil != phil) {
+		pthread_cond_wait(&left_spoon->cv, &left_spoon->mutex);
+	}
+	left_spoon->is_used = true;
+	left_spoon->phil = phil;
+	pthread_mutex_unlock(&left_spoon->mutex);
+
+	// Try to acquire right spoon
+	pthread_mutex_lock(&right_spoon->mutex);
+	if (right_spoon->is_used == false) {
+		right_spoon->is_used = true;
+		right_spoon->phil = phil;
+		pthread_mutex_unlock(&right_spoon->mutex);
+		return true;
+	}
+	// If failed to get right spoon, release the left spoon
+	else {
+		if (right_spoon->phil != phil) {
+			pthread_mutex_lock(&left_spoon->mutex);
+			left_spoon->is_used = false;
+			left_spoon->phil = NULL;
+			pthread_mutex_unlock(&left_spoon->mutex);
+			pthread_mutex_unlock(&right_spoon->mutex);
+			return false;
+		}
+		else {
+			pthread_mutex_unlock(&right_spoon->mutex);
+			return true;
+		}
+	}
+}
+
+```
 - Start by checking the left spoon's availability.
 - If available, lock its mutex and update its state to reflect its taken.
 - If not available, the philosopher thread waits using a condition variable.
