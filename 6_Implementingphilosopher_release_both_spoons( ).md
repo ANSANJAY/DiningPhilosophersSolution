@@ -10,6 +10,42 @@ An implementation of the Dining Philosophers problem, focusing on concurrency co
 
 ### Releasing Both Spoons API 🥄🥄
 
+```C
+
+/* 
+ * Release the spoons once a philosopher has finished eating.
+ */
+void philosopher_release_both_spoons(phil_t *phil) {
+	spoon_t *left_spoon  = phil_get_left_spoon(phil);
+	spoon_t *right_spoon = phil_get_right_spoon(phil);
+
+	pthread_mutex_lock(&left_spoon->mutex);
+	pthread_mutex_lock(&right_spoon->mutex);
+
+	// Validation to ensure correctness before releasing the spoons
+	assert(left_spoon->phil == phil);
+	assert(left_spoon->is_used == true);
+	assert(right_spoon->phil == phil);
+	assert(right_spoon->is_used == true);
+
+	// Release left spoon
+	printf("phil %d releasing the left spoon %d\n", phil->phil_id, left_spoon->spoon_id);
+	left_spoon->phil = NULL;
+	left_spoon->is_used = false;
+	pthread_cond_signal(&left_spoon->cv);
+	pthread_mutex_unlock(&left_spoon->mutex);
+
+	// Release right spoon
+	printf("phil %d releasing the right spoon %d\n", phil->phil_id, right_spoon->spoon_id);
+	right_spoon->phil = NULL;
+	right_spoon->is_used = false;
+	pthread_cond_signal(&right_spoon->cv);
+	pthread_mutex_unlock(&right_spoon->mutex);
+}
+
+
+```
+
 1. **Purpose**:
    - A philosopher releases both spoons, marking them as available.
    - Assumes the philosopher already has access to both spoons.
@@ -20,7 +56,7 @@ An implementation of the Dining Philosophers problem, focusing on concurrency co
    - **Sanity checks**: Ensure the spoons are indeed occupied by the philosopher using assert statements.
      - If any assert fails, there's an inconsistency in the state of data structures.
    - Mark spoons as available, using `printf` for clear output.
-   - Send a **signal** to the condition variable of the released spoon, signaling waiting philosophers.
+   - Send a **signal** to the condition variable of the released spoon, signaling waiting for philosophers.
    - Unlock the mutex of the left spoon.
 
 3. **Key Concept**:
@@ -36,10 +72,27 @@ An implementation of the Dining Philosophers problem, focusing on concurrency co
 4. **Philosopher's Role**:
    - Acts as both producer (releasing spoons) and, in other parts, consumer (acquiring spoons).
 
-### Upcoming Discussion 📚
 
-- The upcoming section will delve into the third API: **philosopher_get_access_both_spoons**.
-- This API holds the core logic behind solving the Dining Philosophers problem and will be discussed in detail in the next segment.
+
+### Assert 📚
+
+In the provided code, the `assert` function is used as a diagnostic tool to enforce certain invariants or conditions in the program. If any of these conditions evaluates as `false`, the program will terminate with an error message, allowing the developer to catch and investigate potential logic flaws.
+
+Here's a breakdown of each `assert` and its purpose:
+
+1. `assert(left_spoon->phil == phil);` 
+    - This checks that the philosopher (`phil`) associated with the left spoon is indeed the current philosopher. It ensures that the philosopher who is trying to release the spoon is the one who currently holds it.
+
+2. `assert(left_spoon->is_used == true);`
+    - This ensures that the left spoon is currently in use. If it's not, then there's a logic flaw since a philosopher shouldn't be releasing a spoon they haven't acquired.
+
+3. `assert(right_spoon->phil == phil);`
+    - Similar to the first assertion, this checks that the philosopher associated with the right spoon is indeed the current philosopher.
+
+4. `assert(right_spoon->is_used == true);`
+    - This checks that the right spoon is currently in use. It's a safety check, similar to the second assertion, but for the right spoon.
+
+If any of these conditions is not met, there is likely a flaw or bug in the logic leading up to this function call, or in the state management of the philosophers and spoons.
 
 ---
 
@@ -62,4 +115,4 @@ An implementation of the Dining Philosophers problem, focusing on concurrency co
 
 ---
 
-Best of luck with your interview prep! Remember, understanding the deeper synchronization concepts behind the Dining Philosophers problem is key. 🍀🌟
+Remember, understanding the deeper synchronization concepts behind the Dining Philosophers problem is key. 🍀🌟
